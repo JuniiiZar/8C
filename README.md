@@ -1,2 +1,2 @@
-# 8C-1
+# 8C
 Generación de aplicación con CodeIgniter
