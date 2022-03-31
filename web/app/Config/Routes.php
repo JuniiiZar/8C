@@ -17,11 +17,11 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultController('LoginController');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -31,8 +31,19 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
-
+//Rutas públicas con acceso a todos
+$routes->get('/', 'LoginController::index');
+$routes->get('/reestablecer-password', 'ForgotPassController::index',['as'=>'reestablecer']);
+$routes->get('/registrar-usuario', 'RegisterController::index',['as'=>'registro']);
+$routes->post('/validar', 'LoginController::validar');
+$routes->get('/clear', 'DbController::clear');
+$routes->get('/logout', 'LoginController::logout');
+//Creamos un grupo para rutas con acceso limitado o autenticado
+$routes->group('admin',['filter'=>'sesion'], function ($routes){
+    $routes->get('dashboard','DashboardController::index');
+    $routes->post('guardar_usuario','Usuario::guardar');
+    $routes->post('actualizar_usuario','Usuario::actualizar');
+});
 /*
  * --------------------------------------------------------------------
  * Additional Routing
